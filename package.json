@@ -91,7 +91,8 @@
     "postcss-import": "^16.1.1",
     "postcss-nesting": "^14.0.0",
     "rehype-callouts": "^2.2.0",
-    "subset-font": "^2.5.0"
+    "subset-font": "^2.5.0",
+    "vercel": "^56.3.1"
   },
   "packageManager": "pnpm@9.14.4"
 }
