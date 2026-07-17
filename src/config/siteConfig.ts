@@ -6,27 +6,25 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "Moonbius's Blog",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: "记录学习与成长的足迹",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://moonbius.vercel.app",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"Moonbius 的个人博客，记录技术学习、项目实践与成长的点滴。",
 
 	// 站点关键词
 	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
+		"Moonbius",
 		"博客",
 		"技术博客",
 		"静态博客",
+		"个人博客",
 	],
 
 	// 主题色
