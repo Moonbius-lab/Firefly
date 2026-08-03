@@ -43,7 +43,12 @@ if (footerConfig.enable) {
     </div>
     <div class="m-0.5 flex gap-2 justify-center flex-wrap">
       &copy; <span id="copyright-year">{currentYear}</span>
-      {profileConfig.name}. All Rights Reserved.
+      <a
+        class="transition link text-(--primary) font-medium"
+        target="_blank"
+        href="https://opensource.org/license/mit"
+        >{profileConfig.name}. MIT License</a
+      >
       <span aria-hidden="true">/</span>
       <a
         class="transition link text-(--primary) font-medium"

@@ -73,7 +73,7 @@ export const siteConfig: SiteConfig = {
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		// 5. 不配置 logo 则导航栏只显示标题
 		// 导航栏标题
-		title: "Firefly",
+		title: "主页",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
