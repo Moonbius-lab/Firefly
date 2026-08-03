@@ -38,8 +38,8 @@ const navbarBlur =
 		? (backgroundWallpaper.common?.navbar?.blur ?? 20)
 		: 0;
 
-// 获取导航栏标题，如果没有设置则使用 siteConfig.title
-const navbarTitle = siteConfig.navbar.title || siteConfig.title;
+// 获取导航栏标题，如果没有设置则使用 siteConfig.title；显式设为 "" 则不显示文字
+const navbarTitle = siteConfig.navbar.title ?? siteConfig.title;
 
 // 获取导航栏宽度配置
 const navbarWidthFull = siteConfig.navbar.widthFull ?? false;
