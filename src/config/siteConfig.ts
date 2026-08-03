@@ -74,7 +74,7 @@ export const siteConfig: SiteConfig = {
 		// 5. 不配置 logo 则导航栏只显示标题
 		logo: {
 			type: "icon",
-			value: "material-symbols:bedtime",
+			value: "mdi:moon-full",
 		},
 		// 导航栏标题，留空则不显示文字（仅图标）
 		title: "",
