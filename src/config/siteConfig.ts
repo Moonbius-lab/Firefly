@@ -72,10 +72,7 @@ export const siteConfig: SiteConfig = {
 		// 3. 本地图片（src目录，自动优化但会增加构建时间）: { type: "image", value: "assets/images/logo.webp", alt: "Logo" }
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
 		// 5. 不配置 logo 则导航栏只显示标题
-		logo: {
-			type: "icon",
-			value: "mdi:moon-full",
-		},
+		// 6. logo 和 title 都不配置时，左上角完全隐藏
 		// 导航栏标题，留空则不显示文字（仅图标）
 		title: "",
 		// 全宽导航栏，导航栏是否占满屏幕宽度

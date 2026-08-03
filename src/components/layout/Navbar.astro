@@ -109,6 +109,7 @@ if (isLocalSrcLogo) {
         "overflow-visible! h-18 px-4"
     ]}>
         <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
+            {(siteConfig.navbar.logo || navbarTitle) && (
             <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-3 md:px-5 font-bold active:scale-95">
                 <div class:list={[
                     "flex flex-row items-center text-md",
@@ -135,6 +136,7 @@ if (isLocalSrcLogo) {
                     {navbarTitle}
                 </div>
             </a>
+            )}
             <div class:list={[
                 "hidden lg:flex items-center space-x-1 col-start-2",
                 isNavbarMenuCentered
