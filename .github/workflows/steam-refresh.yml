@@ -1,0 +1,25 @@
+name: Steam 每日刷新
+
+on:
+  schedule:
+    # 北京时间 0:00（UTC 16:00）触发一次空提交，推动 Vercel 重新部署以刷新 Steam 游玩数据
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 空提交触发重新部署
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin master || true
+          git commit --allow-empty -m "chore: 每日刷新 Steam 游玩数据"
+          git push origin master
