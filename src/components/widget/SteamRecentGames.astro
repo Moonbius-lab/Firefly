@@ -10,6 +10,43 @@ interface Props {
 
 const { class: className, style, widgetConfig } = Astro.props;
 const showTitle = widgetConfig?.showTitle !== false;
+
+type SteamGame = {
+	appid: number;
+	name: string;
+	playtime_2weeks: number;
+	playtime_forever: number;
+	img_icon_url: string;
+};
+
+// 构建时从 Steam Web API 获取最近游玩数据（需要 STEAM_API_KEY 环境变量）
+const apiKey = import.meta.env.STEAM_API_KEY as string | undefined;
+const steamId = (import.meta.env.STEAM_ID as string | undefined) || "76561198248501066";
+
+let games: SteamGame[] | null = null;
+
+if (apiKey) {
+	try {
+		const res = await fetch(
+			`https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${apiKey}&steamid=${steamId}&count=8&format=json`,
+			{ signal: AbortSignal.timeout(15000) },
+		);
+		if (res.ok) {
+			const json = (await res.json()) as { response?: { games?: SteamGame[] } };
+			games = json.response?.games ?? [];
+		}
+	} catch {
+		games = null;
+	}
+}
+
+const gameIconUrl = (appid: number, hash: string): string =>
+	hash
+		? `https://media.steampowered.com/steamcommunity/public/images/apps/${appid}/${hash}.jpg`
+		: `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`;
+
+const formatHours = (minutes: number): string =>
+	minutes > 0 ? `${(minutes / 60).toFixed(1)} 小时` : "未记录";
 ---
 
 <WidgetLayout
@@ -19,93 +56,42 @@ const showTitle = widgetConfig?.showTitle !== false;
 	class={className}
 	style={style}
 >
-	<div id="steam-recent-list" class="flex flex-col gap-1.5">
-		<p class="text-sm text-neutral-500">加载中…</p>
-	</div>
+	{games === null ? (
+		<p class="text-sm text-neutral-500">
+			{apiKey ? "无法获取游玩记录" : "暂未配置 STEAM_API_KEY"}
+		</p>
+	) : games.length === 0 ? (
+		<p class="text-sm text-neutral-500">最近没有游玩记录</p>
+	) : (
+		<div class="flex flex-col gap-1.5">
+			{games.map((game) => (
+				<a
+					href={`https://store.steampowered.com/app/${game.appid}/`}
+					target="_blank"
+					rel="noreferrer noopener"
+					class="group flex min-w-0 items-center gap-3 rounded-lg p-2
+						text-neutral-700/75 dark:text-neutral-300/75
+						hover:bg-(--btn-plain-bg-hover) hover:text-(--primary)"
+				>
+					<img
+						src={gameIconUrl(game.appid, game.img_icon_url)}
+						alt=""
+						loading="lazy"
+						class="h-10 w-10 shrink-0 rounded-md object-cover"
+					/>
+					<div class="flex min-w-0 flex-1 flex-col gap-0.5">
+						<span
+							class="truncate text-sm font-medium text-neutral-800 dark:text-neutral-100"
+						>
+							{game.name}
+						</span>
+						<span class="text-xs text-neutral-500">
+							最近两周 {formatHours(game.playtime_2weeks)} · 累计{" "}
+							{formatHours(game.playtime_forever)}
+						</span>
+					</div>
+				</a>
+			))}
+		</div>
+	)}
 </WidgetLayout>
-
-<script>
-	(async () => {
-		const container = document.getElementById("steam-recent-list");
-		if (!container) return;
-
-		const gameIconUrl = (appid: number, hash: string): string =>
-			hash
-				? `https://media.steampowered.com/steamcommunity/public/images/apps/${appid}/${hash}.jpg`
-				: `https://cdn.akamai.steamstatic.com/steam/apps/${appid}/header.jpg`;
-
-		const formatHours = (minutes: number): string =>
-			minutes > 0
-				? `${(minutes / 60).toFixed(1)} 小时`
-				: "未记录";
-
-		try {
-			const res = await fetch("/api/steam-recent", {
-				headers: { Accept: "application/json" },
-			});
-			if (!res.ok) throw new Error(`HTTP ${res.status}`);
-			const data = (await res.json()) as {
-				games: Array<{
-					appid: number;
-					name: string;
-					playtime_2weeks: number;
-					playtime_forever: number;
-					img_icon_url: string;
-				}>;
-			};
-
-			if (!data.games || data.games.length === 0) {
-				container.textContent = "";
-				const empty = document.createElement("p");
-				empty.className = "text-sm text-neutral-500";
-				empty.textContent = "最近没有游玩记录";
-				container.appendChild(empty);
-				return;
-			}
-
-			container.textContent = "";
-			for (const game of data.games) {
-				const link = document.createElement("a");
-				link.href = `https://store.steampowered.com/app/${game.appid}/`;
-				link.target = "_blank";
-				link.rel = "noreferrer noopener";
-				link.className =
-					"group flex min-w-0 items-center gap-3 rounded-lg p-2 " +
-					"text-neutral-700/75 dark:text-neutral-300/75 " +
-					"hover:bg-(--btn-plain-bg-hover) hover:text-(--primary)";
-
-				const icon = document.createElement("img");
-				icon.src = gameIconUrl(game.appid, game.img_icon_url);
-				icon.alt = "";
-				icon.loading = "lazy";
-				icon.className = "h-10 w-10 shrink-0 rounded-md object-cover";
-
-				const body = document.createElement("div");
-				body.className = "flex min-w-0 flex-1 flex-col gap-0.5";
-
-				const title = document.createElement("span");
-				title.className =
-					"truncate text-sm font-medium text-neutral-800 dark:text-neutral-100";
-				title.textContent = game.name;
-
-				const meta = document.createElement("span");
-				meta.className = "text-xs text-neutral-500";
-				meta.textContent = `最近两周 ${formatHours(
-					game.playtime_2weeks,
-				)} · 累计 ${formatHours(game.playtime_forever)}`;
-
-				body.appendChild(title);
-				body.appendChild(meta);
-				link.appendChild(icon);
-				link.appendChild(body);
-				container.appendChild(link);
-			}
-		} catch {
-			container.textContent = "";
-			const error = document.createElement("p");
-			error.className = "text-sm text-neutral-500";
-			error.textContent = "无法获取游玩记录";
-			container.appendChild(error);
-		}
-	})();
-</script>
