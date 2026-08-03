@@ -28,6 +28,18 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 		},
 		{
+			name: "Steam",
+			icon: "simple-icons:steam",
+			url: "https://steamcommunity.com/profiles/76561198248501066/",
+			showName: false,
+		},
+		{
+			name: "Bilibili",
+			icon: "fa7-brands:bilibili",
+			url: "https://space.bilibili.com/6104440410",
+			showName: false,
+		},
+		{
 			name: "RSS",
 			icon: "fa7-solid:rss",
 			url: "/rss/",
