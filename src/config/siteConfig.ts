@@ -9,7 +9,7 @@ export const siteConfig: SiteConfig = {
 	title: "Moonbius's Blog",
 
 	// 站点副标题
-	subtitle: "记录学习与成长的足迹",
+	subtitle: "",
 
 	// 站点 URL
 	site_url: "https://moonbius.vercel.app",
